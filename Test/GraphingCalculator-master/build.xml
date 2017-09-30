@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<project name="GraphingCalculator" default="compile">
+    <target name="clean" description="remove intermediate files">
+        <delete dir="bin"/>
+    </target>
+    <target name="clobber" depends="clean" description="remove all artifact files">
+        <delete file="GraphingCalculator.jar"/>
+    </target>
+    <target name="compile" description="compile the Java source code to class files">
+        <mkdir dir="bin"/>
+        <javac srcdir="src" destdir="bin"/>
+    </target>
+    <target name="jar" depends="compile" description="create a Jar file for the application">
+        <jar destfile="GraphingCalculator.jar">
+            <fileset dir="bin" includes="**/*.class"/>
+	    <fileset dir="resources" includes="tools.png" />
+            <manifest>
+                <attribute name="Main-Class" value="gui.CalculatorWindow"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

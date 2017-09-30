@@ -1,0 +1,18 @@
+application-name=Test
+application-details=Justs a java test
+default-install-dir=C:\Program Files
+license-path=C:\Users\hdwil\Desktop\Installer Builder\LICENSE_002.txt
+install-folder-name=wow
+## FILES ##
+lwjgl-egl.jar
+main.cpp
+Minecraft.sln
+khronos_license.txt
+RotateCamera.cs
+## FILES END ##
+
+## DIRS ##
+NotePadCPP
+Minecraft
+## DIRS END ##
+main-executable=wow.exe
