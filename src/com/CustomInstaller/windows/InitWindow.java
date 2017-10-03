@@ -98,7 +98,6 @@ public class InitWindow {
 				btnNext.setEnabled(false);
 				LicenseWindow licWindow = new LicenseWindow(txtPath.getText());
 				licWindow.setVisable(true);
-				System.out.println("LOL");
 				
 				frame.dispose();
 				

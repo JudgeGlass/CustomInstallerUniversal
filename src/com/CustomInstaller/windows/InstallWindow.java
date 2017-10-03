@@ -21,6 +21,8 @@ import org.apache.commons.io.FileUtils;
 import com.CustomInstaller.internals.ReadConf;
 import com.CustomInstaller.tools.Utils;
 
+import net.jimmc.jshortcut.JShellLink;
+
 public class InstallWindow {
 	private JFrame frame;
 	private JPanel panel;
@@ -43,7 +45,7 @@ public class InstallWindow {
 		frame = new JFrame();
 		frame.setTitle("Installing");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600, 375);
+		frame.setSize(580, 375);
 		frame.setLocationRelativeTo(null);
 		frame.setLayout(null);
 		frame.setResizable(false);
@@ -98,40 +100,33 @@ public class InstallWindow {
 		conf = new ReadConf();
 		File installDir;
 		try {
-			installDir = new File(installPath + "\\" + conf.getInstallFolderName());
+			installDir = new File(installPath + "/" + conf.getInstallFolderName());
 			installDir.mkdir();
 			
 			int endPoint = 0;
 			for(int i = 1;i<files.size();i++) {
-				proBar.setValue((i));
 				txtPane.setText(txtPane.getText() + "\nExtracting: " + files.get(i));
 				txtPane.setCaretPosition(txtPane.getText().length());
 				File f = new File(files.get(i));
 				try {
 					FileUtils.copyFile(f, new File(installDir.getPath() + "/" + files.get(i)));
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				proBar.setValue((i));
 				endPoint = i;
 			}
 			
 			for(int i = 0;i<dirs.size();i++) {
-				proBar.setValue((i+endPoint));
 				txtPane.setText(txtPane.getText() + "\nExtracting: <DIR> " + dirs.get(i));
 				txtPane.setCaretPosition(txtPane.getText().length());
 				File f = new File(dirs.get(i));
 				try {
 					FileUtils.copyDirectory(f, new File(installDir.getPath() + "/" + dirs.get(i)));
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+				proBar.setValue((i+endPoint));
 			}
 			mainExe = Utils.indexOf(Utils.readLine(mainExeLineNum), '=');
 			System.out.println(mainExe);
@@ -164,11 +159,12 @@ public class InstallWindow {
 	
 	private class Close implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			if(!mainExe.isEmpty()) {
+			if(!mainExe.isEmpty() && !System.getProperty("os.name").equals("Linux")) {
+				makeShort(installPath + "\\" + conf.getInstallFolderName() +"\\" + mainExe);
 				int reply = JOptionPane.showConfirmDialog(null, "Would you like to run it?", "Run?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 				if(reply == JOptionPane.YES_OPTION) {
 					try {
-						Process p = Runtime.getRuntime().exec(installPath + "/" + conf.getInstallFolderName() +"/" + mainExe);
+						Process p = Runtime.getRuntime().exec(installPath + "\\" + conf.getInstallFolderName() +"\\" + mainExe);
 					} catch (IOException e1) {
 						JOptionPane.showMessageDialog(null, "Could not launch main exe", "Error", JOptionPane.ERROR_MESSAGE);
 						e1.printStackTrace();
@@ -177,5 +173,14 @@ public class InstallWindow {
 			}
 			System.exit(0);
 		}
+	}
+	
+	private void makeShort(String path) {
+		JShellLink link = new JShellLink();
+		link.setFolder(JShellLink.getDirectory("desktop"));
+		link.setName(conf.getApplictationName());
+		System.out.println(path);
+		link.setPath(path);
+		link.save();
 	}
 }

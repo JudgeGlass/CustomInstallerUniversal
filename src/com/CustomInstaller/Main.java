@@ -1,5 +1,9 @@
 package com.CustomInstaller;
 
+import java.awt.Font;
+
+import javax.swing.UIManager;
+
 import com.CustomInstaller.windows.InitWindow;
 
 public class Main {
